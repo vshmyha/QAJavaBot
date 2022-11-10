@@ -1,11 +1,8 @@
-package com.lerkin.bot;
+package com.lerkin.qa.api;
 
-import com.lerkin.bot.dto.ExerciseDto;
-import com.lerkin.bot.service.ExerciseService;
+import com.lerkin.qa.api.dto.ExerciseDto;
+import com.lerkin.qa.api.service.ExerciseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,13 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class FileSplitter {
 
     private final ExerciseService service;
 
-    @EventListener(ContextRefreshedEvent.class)
+    //if need initial db use this annotation
+//    @EventListener(ContextRefreshedEvent.class)
     private void saveEntity() {
 
         File folder = new File("C:\\Users\\48574\\Documents\\Q&A text\\");
@@ -63,13 +61,15 @@ public class FileSplitter {
 
             StringBuilder answer = new StringBuilder("");
             String question = null;
+            int counter = 1;
             while (line != null) {
                 line = line.replaceAll("\\+", " ");
                 if (firsLine) {
                     question = line;
                     firsLine = false;
                 } else if (line.contains("оглавлению")) {
-                    ExerciseDto entity = entityParser(question, answer.toString(), Integer.parseInt(topicId));
+                    ExerciseDto entity = entityParser(counter, question, answer.toString(), Integer.parseInt(topicId));
+                    counter++;
                     entities.add(entity);
                     answer.setLength(0);
                     firsLine = true;
@@ -84,8 +84,8 @@ public class FileSplitter {
         return entities;
     }
 
-    private static ExerciseDto entityParser(String question, String answer, int topicId) {
+    private static ExerciseDto entityParser(Integer counter, String question, String answer, int topicId) {
 
-        return new ExerciseDto(topicId, question, answer);
+        return new ExerciseDto(counter, topicId, question, answer);
     }
 }

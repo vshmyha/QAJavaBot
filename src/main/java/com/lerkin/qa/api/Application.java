@@ -1,4 +1,4 @@
-package com.lerkin.bot;
+package com.lerkin.qa.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
